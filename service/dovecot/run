@@ -1,0 +1,13 @@
+#!/bin/sh
+echo '!include auth-passwdfile.conf.ext' > /etc/dovecot/10-auth
+echo "$USERS" > /etc/dovecot/users
+mkdir -p /var/mail/domains
+chown -R 5000:5000 /var/mail/domains
+sed -i -e "s|^mail_location =.*$|mail_location = maildir:/var/mail/domains/%d/%n/Maildir|" /etc/dovecot/conf.d/10-mail.conf
+sed -i -e "s|^#mail_uid =.*$|mail_uid = 5000|" /etc/dovecot/conf.d/10-mail.conf
+sed -i -e "s|^#mail_gid =.*$|mail_gid = 5000|" /etc/dovecot/conf.d/10-mail.conf
+sed -i -e "s|^#!include auth-passwdfile.conf.ext.*$|!include auth-passwdfile.conf.ext|" /etc/dovecot/conf.d/10-auth.conf
+sed -i -e "s|unix_listener lmtp|unix_listener /var/spool/postfix/private/dovecot-lmtp|" /etc/dovecot/conf.d/10-master.conf
+sed -i -e "/dovecot-lmtp/ a\    user = postfix\n    group = postfix\n    mode = 0666" /etc/dovecot/conf.d/10-master.conf
+exec /usr/sbin/dovecot -F
+

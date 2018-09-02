@@ -1,0 +1,9 @@
+#!/bin/sh
+sed -i -e "s/{DOMAINS}/$DOMAINS/" /etc/postfix/main.cf
+echo "$VIRTUAL_ALIASES" > /etc/postfix/virtual
+/usr/sbin/postmap /etc/postfix/virtual
+echo "$VIRTUAL_MAILBOXES" > /etc/postfix/vmailbox
+/usr/sbin/postmap /etc/postfix/vmailbox
+/usr/bin/newaliases
+exec /usr/sbin/postfix start-fg
+
