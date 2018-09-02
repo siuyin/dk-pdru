@@ -26,4 +26,5 @@ ENV DOMAINS='example.com example2.com' \
     VIRTUAL_ALIASES='info@example.com sales@example.com\nsales@example.com sales@example.com\n@example.com catchall@example.com' \
     VIRTUAL_MAILBOXES='sales@example.com example.com/sales\ncatchall@example.com example.com/catchall' \
     USERS='sales@example.com:{PLAIN}salespw::::::\ncatchall@example.com:{PLAIN}catchpass::::::'
+VOLUME ["/etc/rspamd/local.d"]
 CMD ["/sbin/my_init"]
