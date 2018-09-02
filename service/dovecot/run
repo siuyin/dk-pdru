@@ -4,10 +4,24 @@ echo "$USERS" > /etc/dovecot/users
 mkdir -p /var/mail/domains
 chown -R 5000:5000 /var/mail/domains
 sed -i -e "s|^mail_location =.*$|mail_location = maildir:/var/mail/domains/%d/%n/Maildir|" /etc/dovecot/conf.d/10-mail.conf
+sed -i -e "/^mail_location = / i\ mail_home = /var/mail/domains/%d/%n" /etc/dovecot/conf.d/10-mail.conf
+sed -i -e '/mailbox Junk/a\    auto = subscribe' /etc/dovecot/conf.d/15-mailboxes.conf
 sed -i -e "s|^#mail_uid =.*$|mail_uid = 5000|" /etc/dovecot/conf.d/10-mail.conf
 sed -i -e "s|^#mail_gid =.*$|mail_gid = 5000|" /etc/dovecot/conf.d/10-mail.conf
 sed -i -e "s|^#!include auth-passwdfile.conf.ext.*$|!include auth-passwdfile.conf.ext|" /etc/dovecot/conf.d/10-auth.conf
 sed -i -e "s|unix_listener lmtp|unix_listener /var/spool/postfix/private/dovecot-lmtp|" /etc/dovecot/conf.d/10-master.conf
 sed -i -e "/dovecot-lmtp/ a\    user = postfix\n    group = postfix\n    mode = 0666" /etc/dovecot/conf.d/10-master.conf
+sed -i -e 's/#mail_plugins = \$mail_plugins/mail_plugins = \$mail_plugins sieve/' /etc/dovecot/conf.d/20-lmtp.conf
+mkdir -p /var/lib/dovecot/sieve
+sed -i -e 's/#sieve_default = /sieve_default = /' /etc/dovecot/conf.d/90-sieve.conf
+cat > /var/lib/dovecot/sieve/default.sieve << END_SIEVE
+require ["fileinto", "envelope"];
+if header :contains "X-Spam" "Yes" {
+	fileinto "Junk";
+} else {
+	keep;
+}
+END_SIEVE
+sievec /var/lib/dovecot/sieve/default.sieve
 exec /usr/sbin/dovecot -F
 
