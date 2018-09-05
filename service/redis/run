@@ -1,4 +1,6 @@
 #!/bin/sh
+mkdir -p /etc/rspamd/local.d/redis
 echo "maxmemory 50mb" > /etc/redis.conf
 echo "maxmemory-policy volatile-lru" >> /etc/redis.conf
+echo "dir /etc/rspamd/local.d/redis" >> /etc/redis.conf
 exec /usr/bin/redis-server /etc/redis.conf
