@@ -1,5 +1,6 @@
 #!/bin/sh
 echo "maxmemory 50mb" > /etc/redis.conf
 echo "maxmemory-policy volatile-lru" >> /etc/redis.conf
-echo "save 900 1 300 10" >> /etc/redis.conf
+echo "save 900 1" >> /etc/redis.conf
+echo "save 300 10" >> /etc/redis.conf
 exec /usr/bin/redis-server /etc/redis.conf
