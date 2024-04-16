@@ -19,7 +19,8 @@ a@example.com b@another.com
 ```
 will have email destined for a@example.com forwarded to b@another.com .
 The file is immutable within the container.
-To actually update the mapping, change beyondbroadcast.com.secret
+However this will **not** work, as postfix is not configured to relay mail.
+Instead create a message filter in your mail client, eg. Thunderbird/Tools/Message Filters.
 
 To test the postfix component:
 
