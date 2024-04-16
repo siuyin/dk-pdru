@@ -9,3 +9,29 @@
 * Rspamd is a spam filter.
 
 * Unbound is a recursive, caching name server.
+
+## Postfix configuration
+* /etc/postfix/virtual holds the mapping of a user to a server.  
+For example:
+```
+/etc/postfixt/virtual:
+a@example.com b@another.com
+```
+will have email destined for a@example.com forwarded to b@another.com .
+The file is immutable within the container.
+To actually update the mapping, change beyondbroadcast.com.secret
+
+To test the postfix component:
+
+```
+EHLO beyondbroadcast.com
+MAIL FROM:<siuyin@beyondbroadcast.com>
+RCPT TO:<lsy@beyondbroadcast.com> NOTIFY=success,failure
+DATA
+Subject: t 1141
+# press enter for blank line
+This is a test.
+.
+QUIT
+```
+
