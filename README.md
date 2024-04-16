@@ -35,3 +35,10 @@ This is a test.
 QUIT
 ```
 
+## Dovecot configuration
+The above test email sends to the same domain.
+If user lsy@beyondbroadcast.com exist,
+then a Maildir will be created on the Dovecot imap server.
+
+To test, point your imap client (eg. Thunderbird) to the imap server
+to retrieve emails.
